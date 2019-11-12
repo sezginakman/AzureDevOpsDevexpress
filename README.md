@@ -1,5 +1,5 @@
 # AzureDevOpsDevexpress
-
+ 
 # Azure Pipeline Devexpress dll reference fix
 
 You have to copy your Devexpress dll's to folder like /Devexpress.
