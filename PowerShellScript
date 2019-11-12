@@ -1,0 +1,23 @@
+$files = Get-ChildItem  $Env:BUILD_SOURCESDIRECTORY -recurse -include "*.csproj"
+foreach ($file in $files) {
+$fileName = $file.FullName;
+$xmlDoc = [System.Xml.XmlDocument](Get-Content $fileName);
+$project = $xmlDoc.Project;
+$reference = $project.GetElementsByTagName("ItemGroup").GetElementsByTagName("Reference");
+foreach($env in $reference)
+{$NodeExists = $env.HintPath;
+ if($NodeExists)
+  {}
+   else{
+  $dllName = $env.GetAttribute("Include").split(",")[0];  
+  if($dllName -like "Devexpress.*")
+  {  
+   $hintPath = $xmlDoc.CreateElement("HintPath", $project.NamespaceURI);       
+   $hintPath.RemoveAttribute("xmlns");
+   $hintPath.InnerText = ("..\Devexpress\{0}.dll" -f $dllName);
+   $env.AppendChild($hintPath);   
+  } 
+  } 
+}
+$xmlDoc.Save((Resolve-Path $fileName));
+}
